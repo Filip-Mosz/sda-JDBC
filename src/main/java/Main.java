@@ -65,11 +65,13 @@ public class Main {
             String gender = resultSet.getString(3);
             String salary = resultSet.getString(4);
             String id = resultSet.getString(7);
+            String hireDate = resultSet.getString(6);
             System.out.print(String.format("ID: %3s; ", id));
             System.out.print(String.format("Stanowisko: %-24s; ", title));
-            System.out.print(String.format("Imię i Nazwisko: %-10s %-16s; ", firstName, lastName));
+            System.out.print(String.format("Imię i Nazwisko: %-8s %-12s; ", firstName, lastName));
             System.out.print(String.format("Płeć: %s; ", gender));
-            System.out.println(String.format("Wysokość wynagrodzenia: %5s; ", salary));
+            System.out.print(String.format("Data zatrudnienia: %s; ", hireDate));
+            System.out.println(String.format("Wynagrodzenie: %5s; ", salary));
 
 
         }
