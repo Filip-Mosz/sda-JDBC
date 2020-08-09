@@ -1,4 +1,7 @@
+import com.mysql.cj.result.SqlDateValueFactory;
+
 import java.sql.*;
+import java.time.LocalDate;
 
 public class Main {
 
@@ -10,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws SQLException{
         Connection connection= DriverManager.getConnection(URL, USER, PASSWORD);
         task1(connection);
-        System.out.println("%%%%%%%%%%");
+        System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         task2(connection);
         connection.close();
     }
@@ -26,7 +29,7 @@ public class Main {
             String lastName = resultSet.getString(2);
             String gender = resultSet.getString(3);
             String salary = resultSet.getString(4);
-            String id = resultSet.getString(6);
+            String id = resultSet.getString(7);
             System.out.print(String.format("ID: %3s; ", id));
             System.out.print(String.format("Stanowisko: %-24s; ", title));
             System.out.print(String.format("Imię i Nazwisko: %-10s %-16s; ", firstName, lastName));
@@ -39,9 +42,11 @@ public class Main {
     private static void task2(Connection connection) throws SQLException {
         PreparedStatement statement1= connection.prepareStatement(
                 "UPDATE employee\n" +
-                "set salary = salary+?\n" +
-                "where id=6;");
+                "SET salary = salary+?\n" +
+                "WHERE hire_date<?;");
         statement1.setInt(1,500);
+        LocalDate dateCondition = LocalDate.now().minusYears(2);
+        statement1.setString(2,String.valueOf(dateCondition));
         statement1.executeUpdate();
 
         PreparedStatement statement2= connection.prepareStatement(
@@ -53,19 +58,20 @@ public class Main {
 
         ResultSet resultSet = statement1.executeQuery("SELECT * FROM employee ORDER BY position");
 
-
         while(resultSet.next()) {
             String title= resultSet.getString(5);
             String firstName = resultSet.getString(1);
             String lastName = resultSet.getString(2);
             String gender = resultSet.getString(3);
             String salary = resultSet.getString(4);
-            String id = resultSet.getString(6);
+            String id = resultSet.getString(7);
             System.out.print(String.format("ID: %3s; ", id));
             System.out.print(String.format("Stanowisko: %-24s; ", title));
             System.out.print(String.format("Imię i Nazwisko: %-10s %-16s; ", firstName, lastName));
             System.out.print(String.format("Płeć: %s; ", gender));
             System.out.println(String.format("Wysokość wynagrodzenia: %5s; ", salary));
+
+
         }
         statement1.close();
     }
