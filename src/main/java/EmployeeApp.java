@@ -26,9 +26,16 @@ public class EmployeeApp {
                 "Kaczmarek",
                 "M",
                 BigDecimal.valueOf(3000),
-                "Literally Noone",
+                "Literally No one",
                 LocalDate.of(2020,02,02));
         EmployeeDAO empDao = new EmployeeDAO(connection);
         System.out.println(empDao.create(emp1));
+        Employee empRead = empDao.read(6);
+        System.out.println(empRead);
+
+        emp1.setName("Jacek");
+        emp1.setSurname("Kaczmarski");
+        emp1.setPosition("Bard");
+        empDao.update(11,emp1);
     }
 }

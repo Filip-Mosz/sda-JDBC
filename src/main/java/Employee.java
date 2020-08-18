@@ -25,5 +25,15 @@ public class Employee {
         this.hireDate = hireDate;
     }
 
-
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", gender='" + gender + '\'' +
+                ", salary=" + salary +
+                ", position='" + position + '\'' +
+                ", hireDate=" + hireDate +
+                '}';
+    }
 }
