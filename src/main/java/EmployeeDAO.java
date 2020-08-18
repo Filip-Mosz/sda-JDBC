@@ -100,6 +100,32 @@ public class EmployeeDAO implements AutoCloseable {
         return true;
     }
 
+    public boolean delete(int id){
+        try {
+            PreparedStatement statement = dbConnection.prepareStatement(
+                    "DELETE FROM employee\n" +
+                            "WHERE id=?;");
+            statement.setInt(1, id);
+            statement.execute();//ZAJEBISCIE WAZNA LINIJKA!!!!!
+
+//            ResultSet resultSet = statement.getResultSet();
+//            while (resultSet.next()) {
+//                this.name = resultSet.getString(1);
+//                this.surname = resultSet.getString(2);
+//                this.gender = resultSet.getString(3);
+//                this.salary = BigDecimal.valueOf(Long.parseLong(resultSet.getString(4)));
+//                this.position = resultSet.getString(5);
+//                this.hireDate = LocalDate.parse(resultSet.getString(6));
+//            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
     @Override
     public void close() throws Exception {
 

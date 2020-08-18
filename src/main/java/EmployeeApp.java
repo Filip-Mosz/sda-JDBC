@@ -36,6 +36,8 @@ public class EmployeeApp {
         emp1.setName("Jacek");
         emp1.setSurname("Kaczmarski");
         emp1.setPosition("Bard");
-        empDao.update(11,emp1);
+        System.out.println("Update " + empDao.update(11, emp1));
+
+        System.out.println("Delete " +empDao.delete(11));
     }
 }
