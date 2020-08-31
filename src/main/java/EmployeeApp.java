@@ -30,14 +30,20 @@ public class EmployeeApp {
                 LocalDate.of(2020,02,02));
         EmployeeDAO empDao = new EmployeeDAO(connection);
         System.out.println(empDao.create(emp1));
-        Employee empRead = empDao.read(6);
+        Employee empRead = empDao.read(11);
         System.out.println(empRead);
 
         emp1.setName("Jacek");
         emp1.setSurname("Kaczmarski");
         emp1.setPosition("Bard");
         System.out.println("Update " + empDao.update(11, emp1));
+        Employee empRead2 = empDao.read(11);
+        System.out.println(empRead2);
 
-        System.out.println("Delete " +empDao.delete(11));
+//        System.out.println("Delete " + empDao.delete(11));
+//        Employee empRead3 = empDao.read(11);
+//        System.out.println(empRead3);
+
+        //ToDo testy
     }
 }

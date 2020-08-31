@@ -1,6 +1,7 @@
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class EmployeeDAO implements AutoCloseable {
 
@@ -30,7 +31,7 @@ public class EmployeeDAO implements AutoCloseable {
             statement.setInt(5, Integer.parseInt(emp.getSalary().toString()));
             statement.setString(6, emp.getHireDate().toString());
             statement.executeUpdate();//ZAJEBISCIE WAZNA LINIJKA!!!!!
-
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -39,13 +40,13 @@ public class EmployeeDAO implements AutoCloseable {
     }
 
     public Employee read(int id) {
-        try {
+        try (
             PreparedStatement statement = dbConnection.prepareStatement(
                     "SELECT * FROM employee\n" +
                             "WHERE id=?;");
+        ){
             statement.setInt(1, id);
             statement.execute();//ZAJEBISCIE WAZNA LINIJKA!!!!!
-
             ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
                 this.name = resultSet.getString(1);
@@ -68,21 +69,17 @@ public class EmployeeDAO implements AutoCloseable {
                 this.hireDate);
     }
 
-    public boolean update(int id, Employee emp) { //wypadałoby przeładować dla każdej kolumny
+    public boolean update(int id, Employee emp) {
 
-        Employee empOld = read(id); //przypisanie "starych" danych do obiektu, będę porównywał z mowym obiektem
-
-
-        try {
-            PreparedStatement statement = dbConnection.prepareStatement(
+        try (PreparedStatement statement = dbConnection.prepareStatement(
                     "UPDATE employee " +
-                        "SET first_name = ?," +
+                            "SET first_name = ?," +
                             "last_name = ?," +
                             "gender = ?," +
                             "position = ?," +
                             "salary = ?," +
                             "hire_date = ?" +
-                        "WHERE id = ?;");
+                            "WHERE id = ?;");) {
             statement.setString(1, emp.getName());
             statement.setString(2, emp.getSurname());
             statement.setString(3, emp.getGender());
@@ -100,23 +97,14 @@ public class EmployeeDAO implements AutoCloseable {
         return true;
     }
 
-    public boolean delete(int id){
-        try {
-            PreparedStatement statement = dbConnection.prepareStatement(
-                    "DELETE FROM employee\n" +
-                            "WHERE id=?;");
+    public boolean delete(int id) {
+        try (
+                PreparedStatement statement = dbConnection.prepareStatement(
+                        "DELETE FROM employee\n" +
+                                "WHERE id=?;");) {
             statement.setInt(1, id);
             statement.execute();//ZAJEBISCIE WAZNA LINIJKA!!!!!
 
-//            ResultSet resultSet = statement.getResultSet();
-//            while (resultSet.next()) {
-//                this.name = resultSet.getString(1);
-//                this.surname = resultSet.getString(2);
-//                this.gender = resultSet.getString(3);
-//                this.salary = BigDecimal.valueOf(Long.parseLong(resultSet.getString(4)));
-//                this.position = resultSet.getString(5);
-//                this.hireDate = LocalDate.parse(resultSet.getString(6));
-//            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,7 +115,27 @@ public class EmployeeDAO implements AutoCloseable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeDAO that = (EmployeeDAO) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(surname, that.surname) &&
+                Objects.equals(gender, that.gender) &&
+                Objects.equals(salary, that.salary) &&
+                Objects.equals(position, that.position) &&
+                Objects.equals(hireDate, that.hireDate) &&
+                Objects.equals(dbConnection, that.dbConnection);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, surname, gender, salary, position, hireDate, dbConnection);
+    }
+
+    @Override
     public void close() throws Exception {
+
 
     }
 }
@@ -138,3 +146,4 @@ public class EmployeeDAO implements AutoCloseable {
 
 //Employee
 //EmployeeDao employeeDao = new EmployeeDAO(connection);
+//ToDo nadpisać equals dla DAO i użyć try with resources
